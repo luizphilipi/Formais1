@@ -39,7 +39,7 @@ public class Testes {
 		// System.out.println(automato.obterComplemento());
 
 		// System.out.println();
-		// System.out.println("======================== TESTES COM GRAMÁTICA ========================");
+		// System.out.println("======================== TESTES COM GRAMï¿½TICA ========================");
 		// System.out.println();
 		//
 		// String gramaticaSTR = "S -> a|aS|bB\nB -> b|bS";
@@ -131,7 +131,7 @@ public class Testes {
 //		System.out.println("b*\n" + bEstrela + "\n");
 //		System.out.println("complemento b*\n" + bEstrela.obterComplemento() + "\n");
 //		Automato uniao = aEstrela.uniao(bEstrela);
-//		System.out.println("União\n" + uniao + "\n");
+//		System.out.println("Uniï¿½o\n" + uniao + "\n");
 //		System.out.println(uniao.reconhecerSentenca("aaaa"));
 //		System.out.println(uniao.reconhecerSentenca("bbbb"));
 //
@@ -147,7 +147,7 @@ public class Testes {
 
 	public static Automato criaImparDivisivelPor3() {
 		Automato automato = new Automato();
-
+int a;
 		automato.addEstado("P");
 		automato.addEstadoFinal("Q");
 		automato.addEstadoFinal("R");
