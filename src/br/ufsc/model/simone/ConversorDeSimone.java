@@ -75,9 +75,9 @@ public class ConversorDeSimone {
 
     private br.ufsc.model.Automato estados2Automato(List<EstadoComposto> estados, List<Character> alfabeto) throws Exception {
         br.ufsc.model.Automato automato = new br.ufsc.model.Automato();
-        for (Character simbolo : alfabeto) {
+        alfabeto.stream().forEach((simbolo) -> {
             automato.addSimbolo(simbolo.toString());
-        }
+        });
         br.ufsc.model.Estado inicial = new br.ufsc.model.Estado(estados.get(0).estado, ehFinal(estados.get(0).composicao));
         automato.addEstado(inicial.getNome());
         automato.setEstadoInicial(inicial.getNome());
