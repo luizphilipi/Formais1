@@ -124,11 +124,19 @@ public class Automato {
 				estado = novosEstados.get(posicao);
 				String nome = "";
 				String sep = "";
+				boolean terminal = false;
 				for (Estado e : estado) {
 					nome += sep + e.getNome();
 					sep = "|";
+					if (e.isTerminal()) {
+						terminal = true;
+					}
 				}
-				automatoDeterministico.addEstado(nome);
+				if (terminal) {
+					automatoDeterministico.addEstadoFinal(nome);
+				} else {
+					automatoDeterministico.addEstado(nome);
+				}
 				for (String simbolo : alfabeto) {
 					List<Estado> estadoDeterminizado = geraEstadoDeterministico(estado, simbolo);
 					if (!novosEstados.contains(estadoDeterminizado)) {
@@ -136,7 +144,7 @@ public class Automato {
 					}
 					String nomeDeterminizado = "";
 					sep = "";
-					boolean terminal = false;
+					terminal = false;
 					for (Estado e : estadoDeterminizado) {
 						nomeDeterminizado += sep + e.getNome();
 						sep = "|";
@@ -174,12 +182,15 @@ public class Automato {
 	}
 
 	public Automato removerEpsilonTransicoes() {
+		if (!possuiEpsilonTransicao()) {
+			return this;
+		}
 		Automato novo = new Automato();
 		novo.alfabeto = alfabeto;
 		novo.alfabeto.remove("&");
 		try {
 			for (Estado estado : estados) {
-				boolean terminal = false;
+				boolean terminal = estado.isTerminal();
 				novo.addEstado(estado.getNome());
 				for (Entry<String, List<Estado>> transicao : estado.getTransicoes().entrySet()) {
 					if (transicao.getKey().equals("&")) {
@@ -202,7 +213,6 @@ public class Automato {
 					} else {
 						for (Estado filho : transicao.getValue()) {
 							if (filho.isTerminal()) {
-								terminal = true;
 								novo.addEstadoFinal(filho.getNome());
 							} else {
 								novo.addEstado(filho.getNome());
@@ -347,7 +357,11 @@ public class Automato {
 		Automato uniao = new Automato();
 
 		try {
-			uniao.addEstado("S");
+			if (estadoInicial.isTerminal() || automato.estadoInicial.isTerminal()) {
+				uniao.addEstadoFinal("S");
+			} else {
+				uniao.addEstado("S");
+			}
 			uniao.setEstadoInicial("S");
 			String sufixo = "1";
 			for (Estado estado : estados) {
@@ -502,6 +516,52 @@ public class Automato {
 
 	@Override
 	public String toString() {
+		String leftAlignFormat = "| %-1s%-1s%-13s ";
+		for (int i = 0; i < alfabeto.size(); i++) {
+			leftAlignFormat += "| %-9s ";
+		}
+		leftAlignFormat += "|%n";
+
+		String headerFotter = "+-----------------";
+		for (int i = 0; i < alfabeto.size(); i++) {
+			headerFotter += "+-----------";
+		}
+		headerFotter += "+%n";
+		System.out.format(headerFotter);
+		String header = "|     Estado      ";
+		for (String simbolo : alfabeto) {
+			header += "|     " + simbolo + "     ";
+		}
+		header += "|%n";
+		System.out.printf(header);
+		System.out.format(headerFotter);
+
+		for (Estado estado : estados) {
+			Object[] args = new Object[3 + alfabeto.size()];
+			args[0] = estado.isInicial() ? ">" : "";
+			args[1] = estado.isTerminal() ? "*" : "";
+			args[2] = estado.getNome();
+			int i = 3;
+			for (String simbolo : alfabeto) {
+				List<Estado> transicao = estado.getTransicoes().get(simbolo);
+				String sep = "";
+				String nome = "";
+				if (transicao != null) {
+					for (Estado estado2 : transicao) {
+						nome += sep + estado2.getNome();
+						sep = ", ";
+					}
+				} else {
+					nome = "-";
+				}
+				args[i] = nome;
+				i++;
+			}
+			System.out.format(leftAlignFormat, args);
+		}
+
+		System.out.format(headerFotter);
+
 		String valor = "Q = [";
 		String sep = "";
 		for (Estado estado : estados) {

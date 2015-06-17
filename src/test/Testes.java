@@ -124,25 +124,32 @@ public class Testes {
 		// System.out.println(imparDivisivelPor3.obterEstadosAlcancaveis());
 		// System.out.println(imparDivisivelPor3.obterEstadosVivos());
 
-//		Automato aEstrela = aEstrela();
-//		System.out.println("a*\n" + aEstrela + "\n");
-//		System.out.println("complemento a*\n" + aEstrela.obterComplemento() + "\n");
-//		Automato bEstrela = bEstrela();
-//		System.out.println("b*\n" + bEstrela + "\n");
-//		System.out.println("complemento b*\n" + bEstrela.obterComplemento() + "\n");
-//		Automato uniao = aEstrela.uniao(bEstrela);
-//		System.out.println("União\n" + uniao + "\n");
-//		System.out.println(uniao.reconhecerSentenca("aaaa"));
-//		System.out.println(uniao.reconhecerSentenca("bbbb"));
-//
-//		System.out.println();
-//		Automato interseccao = aEstrela.interseccao(bEstrela);
-//		System.out.println("Interseccao\n" + interseccao + "\n");
-//		System.out.println();
-//		System.out.println(interseccao.reconhecerSentenca("b"));
-		
-		Automato automatoNathalia = automatoNathalia();
-		System.out.println(automatoNathalia.obterAutomatoMinimo());
+		// Automato aEstrela = aEstrela();
+		// System.out.println("a*\n" + aEstrela + "\n");
+		// System.out.println("complemento a*\n" + aEstrela.obterComplemento() + "\n");
+		// Automato bEstrela = bEstrela();
+		// System.out.println("b*\n" + bEstrela + "\n");
+		// System.out.println("complemento b*\n" + bEstrela.obterComplemento() + "\n");
+		// Automato uniao = aEstrela.uniao(bEstrela);
+		// System.out.println("União\n" + uniao + "\n");
+		// System.out.println(uniao.reconhecerSentenca("aaaa"));
+		// System.out.println(uniao.reconhecerSentenca("bbbb"));
+		//
+		// System.out.println();
+		// Automato interseccao = aEstrela.interseccao(bEstrela);
+		// System.out.println("Interseccao\n" + interseccao + "\n");
+		// System.out.println();
+		// System.out.println(interseccao.reconhecerSentenca("b"));
+
+		// Automato automatoNathalia = automatoNathalia();
+		// System.out.println(automatoNathalia.obterAutomatoMinimo());
+
+		// Automato exercicio4a = exercicio4a();
+		// System.out.println(exercicio4a.determinizar());
+		// System.out.println();
+		// System.out.println(exercicio4a.obterAutomatoMinimo());
+
+		System.out.println(exercicio10().reconhecerSentenca("ababab"));
 	}
 
 	public static Automato criaImparDivisivelPor3() {
@@ -204,10 +211,10 @@ public class Testes {
 
 		return automato;
 	}
-	
-	public static Automato automatoNathalia(){
+
+	public static Automato automatoNathalia() {
 		Automato automato = new Automato();
-		
+
 		automato.addEstado("S");
 		automato.addEstadoFinal("A");
 		automato.addEstado("C");
@@ -238,5 +245,95 @@ public class Testes {
 		}
 
 		return automato;
+	}
+
+	public static Automato exercicio4a() {
+		Automato automato = new Automato();
+
+		automato.addEstadoFinal("S");
+		automato.addEstado("A");
+		automato.addEstado("B");
+		automato.addEstado("C");
+		automato.addEstado("D");
+		automato.addEstadoFinal("F");
+
+		automato.addSimbolo("a");
+		automato.addSimbolo("b");
+
+		try {
+			automato.addTransicao("S", "a", "B");
+			automato.addTransicao("S", "a", "D");
+			automato.addTransicao("S", "a", "F");
+			automato.addTransicao("S", "b", "A");
+			automato.addTransicao("S", "b", "C");
+			automato.addTransicao("S", "b", "F");
+			automato.addTransicao("A", "a", "B");
+			automato.addTransicao("A", "a", "F");
+			automato.addTransicao("A", "b", "A");
+			automato.addTransicao("B", "a", "A");
+			automato.addTransicao("B", "b", "B");
+			automato.addTransicao("B", "b", "F");
+			automato.addTransicao("C", "a", "D");
+			automato.addTransicao("C", "b", "C");
+			automato.addTransicao("C", "b", "F");
+			automato.addTransicao("D", "a", "C");
+			automato.addTransicao("D", "a", "F");
+			automato.addTransicao("D", "b", "D");
+			automato.setEstadoInicial("S");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return automato;
+	}
+
+	public static Automato exercicio10() {
+		Automato automato1 = new Automato();
+
+		automato1.addEstado("A");
+		automato1.addEstadoFinal("B");
+		automato1.addEstado("C");
+		automato1.addEstadoFinal("D");
+
+		automato1.addSimbolo("a");
+		automato1.addSimbolo("b");
+
+		try {
+			automato1.addTransicao("A", "a", "B");
+			automato1.addTransicao("A", "b", "C");
+			automato1.addTransicao("B", "a", "A");
+			automato1.addTransicao("B", "b", "D");
+			automato1.addTransicao("C", "a", "B");
+			automato1.addTransicao("D", "a", "A");
+			automato1.setEstadoInicial("A");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		automato1.toString();
+		automato1.obterComplemento().toString();
+
+		Automato automato2 = new Automato();
+
+		automato2.addEstado("A");
+		automato2.addEstadoFinal("B");
+
+		automato2.addSimbolo("a");
+		automato2.addSimbolo("b");
+
+		try {
+			automato2.addTransicao("A", "a", "A");
+			automato2.addTransicao("A", "b", "B");
+			automato2.addTransicao("B", "a", "B");
+			automato2.addTransicao("B", "b", "A");
+			automato2.setEstadoInicial("A");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		automato2.toString();
+		automato2.obterComplemento().toString();
+
+		return automato1.interseccao(automato2);
 	}
 }
