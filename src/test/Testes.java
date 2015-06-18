@@ -39,7 +39,7 @@ public class Testes {
 		// System.out.println(automato.obterComplemento());
 
 		// System.out.println();
-		// System.out.println("======================== TESTES COM GRAMÁTICA ========================");
+		// System.out.println("======================== TESTES COM GRAMï¿½TICA ========================");
 		// System.out.println();
 		//
 		// String gramaticaSTR = "S -> a|aS|bB\nB -> b|bS";
@@ -154,7 +154,6 @@ public class Testes {
 
 	public static Automato criaImparDivisivelPor3() {
 		Automato automato = new Automato();
-
 		automato.addEstado("P");
 		automato.addEstadoFinal("Q");
 		automato.addEstadoFinal("R");

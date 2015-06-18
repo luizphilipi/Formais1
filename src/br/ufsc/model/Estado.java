@@ -1,12 +1,15 @@
 package br.ufsc.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-public class Estado implements Comparable<Estado> {
+public class Estado implements Comparable<Estado>, Serializable {
+
+	private static final long serialVersionUID = 3425239595937603665L;
 
 	private String nome;
 

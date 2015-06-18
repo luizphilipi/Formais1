@@ -1,5 +1,6 @@
 package br.ufsc.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -11,7 +12,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Stack;
 
-public class Automato {
+public class Automato implements Serializable {
+
+	private static final long serialVersionUID = 6708950044266477763L;
 
 	private Set<Estado> estados = new HashSet<Estado>();
 
@@ -42,7 +45,7 @@ public class Automato {
 		}
 	}
 
-	private Estado encontrarEstado(String nome) throws Exception {
+	public Estado encontrarEstado(String nome) throws Exception {
 		Iterator<Estado> iterator = estados.iterator();
 		while (iterator.hasNext()) {
 			Estado element = iterator.next();
@@ -514,6 +517,14 @@ public class Automato {
 		return minimo;
 	}
 
+	public Set<Estado> getEstados() {
+		return estados;
+	}
+
+	public List<String> getAlfabeto() {
+		return alfabeto;
+	}
+
 	@Override
 	public String toString() {
 		String leftAlignFormat = "| %-1s%-1s%-13s ";
@@ -582,4 +593,97 @@ public class Automato {
 		valor += estados;
 		return valor;
 	}
+
+	public int obterNumeroEstados() {
+		return estados.size();
+	}
+
+	/**
+	 * Faz o fechamento do automato atual, adicionando epsilon transições dos estados finais para o estado inicial.
+	 * 
+	 * @return
+	 */
+	public Automato obterAutomatoFechamento() {
+		for (Estado e : estados) {
+			if (e.isTerminal()) {
+				try {
+					addTransicao(e.getNome(), "&", estadoInicial.getNome());
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+		}
+		estadoInicial.setTerminal(true);
+		return this;
+	}
+
+	/**
+	 * Faz a operação opção (?) no automato atual, ou seja, coloca seu estado inicial como final
+	 * 
+	 * @return
+	 */
+	public Automato obterAutomatoOpcao() {
+		estadoInicial.setTerminal(true);
+		return this;
+	}
+
+	public Automato obterAutomatoConcatenadoCom(Automato automato) {
+		Automato concatenado = new Automato();
+		try {
+			for (Estado estado : automato.estados) {
+				String novoNome = estado.getNome() + "_2";
+				if (estado.isTerminal()) {
+					concatenado.addEstadoFinal(novoNome);
+				} else {
+					concatenado.addEstado(novoNome);
+				}
+			}
+
+			for (Estado estado : automato.estados) {
+				for (Entry<String, List<Estado>> entrada : estado.getTransicoes().entrySet()) {
+					String novoNome = estado.getNome() + "_2";
+					for (Estado estado2 : entrada.getValue()) {
+						concatenado.addTransicao(novoNome, entrada.getKey(), estado2.getNome() + "_2");
+					}
+				}
+			}
+
+			for (Estado estado : estados) {
+				String novoNome = estado.getNome() + "_1";
+				concatenado.addEstado(novoNome);
+			}
+
+			for (Estado estado : estados) {
+				for (Entry<String, List<Estado>> entrada : estado.getTransicoes().entrySet()) {
+					String novoNome = estado.getNome() + "_1";
+					for (Estado estado2 : entrada.getValue()) {
+						concatenado.addTransicao(novoNome, entrada.getKey(), estado2.getNome() + "_1");
+					}
+				}
+				if (estado.isTerminal()) {
+					concatenado.addTransicao(estado.getNome() + "_1", "&", automato.estadoInicial.getNome() + "_2");
+				}
+			}
+
+			concatenado.setEstadoInicial(estadoInicial.getNome() + "_1");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return concatenado;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Automato other = (Automato) obj;
+		Automato a = this.interseccao(other.obterComplemento()).obterAutomatoMinimo();
+		Automato b = other.interseccao(this.obterComplemento()).obterAutomatoMinimo();
+		return a.estados.size() == b.estados.size();
+	}
+
 }
